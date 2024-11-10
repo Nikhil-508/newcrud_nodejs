@@ -77,15 +77,16 @@ const insights = async (req, res) => {
         const start = new Date(startDate);
         const end = new Date(endDate);
 
+
         if (!start || !end) {
             return res.status(400).json({ message: 'Invalid date range' });
         }
 
-        const totalOrders = await Order.countDocuments({
+        const totalOrders = await orderModel.countDocuments({
             orderDate: { $gte: start, $lte: end }
         });
 
-        const revenueByCategory = await Order.aggregate([
+        const revenueByCategory = await orderModel.aggregate([
             { $match: { orderDate: { $gte: start, $lte: end } } },
             { $unwind: '$items' },
             {
@@ -105,7 +106,7 @@ const insights = async (req, res) => {
             }
         ]);
 
-        const topProducts = await Order.aggregate([
+        const topProducts = await orderModel.aggregate([
             { $match: { orderDate: { $gte: start, $lte: end } } },
             { $unwind: '$items' },
             {
@@ -135,12 +136,13 @@ const insights = async (req, res) => {
             }
         ]);
 
-        const totalRevenue = await Order.aggregate([
+        const totalRevenue = await orderModel.aggregate([
             { $match: { orderDate: { $gte: start, $lte: end } } },
             { $group: { _id: null, totalRevenue: { $sum: '$totalAmount' } } }
         ]);
 
-        const totalUsers = await User.countDocuments();
+        const totalUsers = await userModel.countDocuments();
+        
         const avgRevenuePerUser = totalUsers > 0 ? totalRevenue[0].totalRevenue / totalUsers : 0;
 
         res.json({
