@@ -6,7 +6,6 @@ const router = express.Router()
 router.post('/register',register)
 router.post('/add-product',addProduct)
 router.post('/create-order',order)
-// router.get('/insights',)
 router.get('/get-All-Users',getAllUsers)
 router.get('/insights',insights)
 

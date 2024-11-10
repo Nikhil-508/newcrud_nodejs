@@ -10,7 +10,10 @@ const orderSchema = new mongoose.Schema({
         }
     ],
     totalAmount: Number,
-    orderDate: Date
+    orderDate: {
+        type : Date,
+        default : Date.now()
+    }
 })
 
 const orderModel = new mongoose.model('orders',orderSchema)

@@ -2,6 +2,20 @@ const userModel = require("../Model/userModel");
 const productModel = require('../Model/productModel');
 const orderModel = require("../Model/orderModel");
 
+
+
+// const authorize = (roles = []) => {
+//     return (req, res, next) => {
+//       if (!roles.includes(req.user.role)) {
+//         return res.status(403).json({ message: 'Access denied' });
+//       }
+//       next();
+//     };
+//   };
+  
+//   module.exports = authorize;
+
+
 const register = async (req, res) => {
     try {
         const { name, email, password } = req.body;
@@ -85,6 +99,8 @@ const insights = async (req, res) => {
         const totalOrders = await orderModel.countDocuments({
             orderDate: { $gte: start, $lte: end }
         });
+        console.log(totalOrders,"orderss");
+        
 
         const revenueByCategory = await orderModel.aggregate([
             { $match: { orderDate: { $gte: start, $lte: end } } },
@@ -105,6 +121,9 @@ const insights = async (req, res) => {
                 }
             }
         ]);
+
+        console.log(revenueByCategory,"rctgryy");
+        
 
         const topProducts = await orderModel.aggregate([
             { $match: { orderDate: { $gte: start, $lte: end } } },
